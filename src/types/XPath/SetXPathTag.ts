@@ -1,4 +1,4 @@
-export type XPathTag = {
+export type SetXPathTag = {
   _: string;
   $: {
     xpath: string;

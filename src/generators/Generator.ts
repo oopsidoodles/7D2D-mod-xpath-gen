@@ -4,6 +4,7 @@ abstract class Generator {
   // TODO this needs namespace tag
   constructor(private inFilePath: string, private outFilePath: string) {}
 
+  // TODO this can work off a file driver, specify root path, and then type of file ex. 'spawning' and return the correct file and type
   protected async readFile<T extends any>() {
     return parseXML<T>(this.inFilePath);
   }
