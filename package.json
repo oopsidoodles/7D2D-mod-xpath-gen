@@ -1,0 +1,21 @@
+{
+  "name": "7d2d-mod-xpath-gen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"no tests\"",
+    "type-check": "tsc --noEmit",
+    "build": "npm run type-check && rm -rf ./dist && tsc",
+    "build:unsafe": "rm -rf ./dist && tsc"
+  },
+  "author": "vilimilner@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4",
+    "@types/xml2js": "^0.4.11"
+  }
+}
