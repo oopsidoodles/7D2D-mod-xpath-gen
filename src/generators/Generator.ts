@@ -1,21 +1,27 @@
+import ConfigFileDriver from "../utils/ConfigFileDriver";
 import parseXML from "../utils/parseXML";
 import writeXML from "../utils/writeXML";
 import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
 
 abstract class Generator {
+  private configFileDriver: ConfigFileDriver;
+
   constructor(
-    private inFilePath: string,
+    private inFileDir: string,
     private outFilePath: string,
     private namespace: string
-  ) {}
-
-  // TODO this can work off a file driver, specify root path, and then type of file ex. 'spawning' and return the correct file and type
-  protected async readFile<T extends any>() {
-    return parseXML<T>(this.inFilePath);
+  ) {
+    this.configFileDriver = new ConfigFileDriver(inFileDir);
   }
 
-  // stub for now
-  // TODO this can accept array of XPathTag to then make a set with namespace, add util for writing XML file to disk
+  protected async readFile<
+    T extends Parameters<
+      typeof ConfigFileDriver["prototype"]["readConfigFile"]
+    >[0]
+  >(name: T) {
+    return this.configFileDriver.readConfigFile(name);
+  }
+
   protected async writeFile(collection: XPathTagCollection): Promise<void> {
     const namespacedCollection = {
       [this.namespace]: collection,

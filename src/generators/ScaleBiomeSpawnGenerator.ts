@@ -6,7 +6,7 @@ import { SpawningXMLFile, Biome, Spawn } from "../types/files/SpawningXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
 
 const SPAWN_ENTITYGROUP_BLACKLIST: Array<RegExp> = [
-  /WildGameForest/,
+  /^WildGameForest$/,
   /^EnemyAnimals.*/,
 ];
 
@@ -48,13 +48,11 @@ class ScaleBiomeSpawnGenerator extends Generator {
   };
 
   public run = async () => {
-    const data = await super.readFile<SpawningXMLFile>();
-    console.log(data);
+    const data = await super.readFile("spawning");
     const setTags = data.spawning.biome
       .map(this.mapBiome)
       .flat()
       .map(curriedPrependXPathToTag("/spawning"));
-    // console.dir(setTags, { depth: null });
     await super.writeFile({
       set: setTags,
     });
