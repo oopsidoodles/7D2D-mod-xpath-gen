@@ -1,4 +1,5 @@
 import parseXML from "../utils/parseXML";
+import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
 
 abstract class Generator {
   // TODO this needs namespace tag
@@ -11,7 +12,7 @@ abstract class Generator {
 
   // stub for now
   // TODO this can accept array of XPathTag to then make a set with namespace, add util for writing XML file to disk
-  protected async writeFile() {}
+  protected async writeFile(collection: XPathTagCollection) {}
 
   public abstract run(): Promise<void>;
 }
