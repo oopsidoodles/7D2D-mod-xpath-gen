@@ -5,6 +5,9 @@ import scaleSafeNumber from "../utils/scaleSafeNumber";
 import propertyBlacklistFilter from "../utils/propertyBlacklistFilter";
 import { Spawn, Gamestage, Spawner } from "./../types/files/GamestagesXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
+import { GamestagesXMLFile } from "./../types/files/GamestagesXMLFile";
+import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
+import { ConfigFiles } from "../types/files/ConfigFiles";
 
 const SPAWNER_NAME_BLACKLIST = [/^animal.*$/];
 
@@ -19,13 +22,8 @@ const SPAWN_GROUP_BLACKLIST = [
 ];
 
 class ScaleGamestageSpawnGenerator extends Generator {
-  constructor(
-    inFilePath: string,
-    outFilePath: string,
-    namespace: string,
-    private scale: number
-  ) {
-    super(inFilePath, outFilePath, namespace);
+  constructor(private scale: number) {
+    super();
   }
 
   private filterSpawn = propertyBlacklistFilter<Spawn>(
@@ -73,15 +71,19 @@ class ScaleGamestageSpawnGenerator extends Generator {
       .flat()
       .map(curriedPrependXPathToTag(`/spawner[@name='${spawner.$.name}']`));
 
-  public run = async () => {
-    const data = await super.readFile("gamestages");
-    const setTags = data.gamestages.spawner
+  public getConfigName = (): keyof ConfigFiles => "gamestages";
+
+  public generateXPathCollection = (
+    config: GamestagesXMLFile
+  ): XPathTagCollection => {
+    const setTags = config.gamestages.spawner
       .filter(this.filterSpawner)
       .map(this.mapSpawner)
       .flat();
-    await super.writeFile({
+
+    return {
       set: setTags,
-    });
+    };
   };
 }
 

@@ -1,36 +1,14 @@
-import ConfigFileService from "../utils/ConfigFileService";
-import parseXML from "../utils/parseXML";
-import writeXML from "../utils/writeXML";
 import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
+import { ConfigFiles } from "./../types/files/ConfigFiles";
 
 abstract class Generator {
-  private configFileDriver: ConfigFileService;
+  constructor() {}
 
-  constructor(
-    private inFileDir: string,
-    private outFilePath: string,
-    private namespace: string
-  ) {
-    this.configFileDriver = new ConfigFileService(inFileDir);
-  }
+  public abstract getConfigName(): keyof ConfigFiles;
 
-  protected async readFile<
-    T extends Parameters<
-      typeof ConfigFileService["prototype"]["readConfigFile"]
-    >[0]
-  >(name: T) {
-    return this.configFileDriver.readConfigFile(name);
-  }
-
-  protected async writeFile(collection: XPathTagCollection): Promise<void> {
-    const namespacedCollection = {
-      [this.namespace]: collection,
-    };
-    await writeXML(this.outFilePath, namespacedCollection);
-  }
-
-  // TODO refactor using pattern I forget name of to already do the read and write file for you, simply return a collection from the run
-  public abstract run(): Promise<void>;
+  public abstract generateXPathCollection(
+    config: ConfigFiles[keyof ConfigFiles]
+  ): XPathTagCollection;
 }
 
 export default Generator;

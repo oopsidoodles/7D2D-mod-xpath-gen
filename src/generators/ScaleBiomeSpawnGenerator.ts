@@ -3,8 +3,10 @@ import curriedPrependXPathToTag from "../utils/curriedPrependXPathToTag";
 import safeNumberFromStringFactory from "../utils/SafeNumber/safeNumberFactory";
 import scaleSafeNumber from "../utils/scaleSafeNumber";
 import propertyBlacklistFilter from "../utils/propertyBlacklistFilter";
-import { Biome, Spawn } from "../types/files/SpawningXMLFile";
+import { Biome, Spawn, SpawningXMLFile } from "../types/files/SpawningXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
+import { ConfigFiles } from "../types/files/ConfigFiles";
+import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
 
 const SPAWN_ENTITYGROUP_BLACKLIST: Array<RegExp> = [
   /^WildGameForest$/,
@@ -12,13 +14,8 @@ const SPAWN_ENTITYGROUP_BLACKLIST: Array<RegExp> = [
 ];
 
 class ScaleBiomeSpawnGenerator extends Generator {
-  constructor(
-    inFilePath: string,
-    outFilePath: string,
-    namespace: string,
-    private scale: number
-  ) {
-    super(inFilePath, outFilePath, namespace);
+  constructor(private scale: number) {
+    super();
   }
 
   private filterSpawn = propertyBlacklistFilter<Spawn>(
@@ -26,6 +23,7 @@ class ScaleBiomeSpawnGenerator extends Generator {
     SPAWN_ENTITYGROUP_BLACKLIST
   );
 
+  // TODO this needs much more descriptive xpath tags, need a utility to combine multiple AND conditions into valid xpath
   private mapSpawn = (spawn: Spawn): SetXPathTag => {
     const maxCount = safeNumberFromStringFactory(spawn.$.maxcount);
     return {
@@ -42,15 +40,19 @@ class ScaleBiomeSpawnGenerator extends Generator {
       .map(this.mapSpawn)
       .map(curriedPrependXPathToTag(`/biome[@name='${biome.$.name}']`));
 
-  public run = async () => {
-    const data = await super.readFile("spawning");
-    const setTags = data.spawning.biome
+  public getConfigName = (): keyof ConfigFiles => "spawning";
+
+  public generateXPathCollection = (
+    config: SpawningXMLFile
+  ): XPathTagCollection => {
+    const setTags = config.spawning.biome
       .map(this.mapBiome)
       .flat()
       .map(curriedPrependXPathToTag("/spawning"));
-    await super.writeFile({
+
+    return {
       set: setTags,
-    });
+    };
   };
 }
 
