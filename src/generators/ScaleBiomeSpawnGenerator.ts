@@ -20,7 +20,9 @@ class ScaleBiomeSpawnGenerator extends Generator {
     super();
   }
 
-  private filterSpawn = propertyBlacklistFilter<Spawn>(
+  public getConfigName = (): keyof ConfigFiles => "spawning";
+
+  private filterSpawnByEntityGroup = propertyBlacklistFilter<Spawn>(
     "entitygroup",
     SPAWN_ENTITYGROUP_BLACKLIST
   );
@@ -30,7 +32,7 @@ class ScaleBiomeSpawnGenerator extends Generator {
     return {
       _: scaleSafeNumber(maxCount, this.scale).toString(),
       $: {
-        xpath: `/spawn[${getXPathAndExpression<Spawn>(spawn, [
+        xpath: `/spawn[${getXPathAndExpression(spawn, [
           "entitygroup",
           "time",
           "tags",
@@ -42,15 +44,13 @@ class ScaleBiomeSpawnGenerator extends Generator {
 
   private mapBiome = (biome: Biome): Array<SetXPathTag> =>
     biome.spawn
-      .filter(this.filterSpawn)
+      .filter(this.filterSpawnByEntityGroup)
       .map(this.mapSpawn)
       .map(
         curriedPrependXPathToTag(
-          `/biome[${getXPathEqualExpression<Biome>(biome, "name")}]`
+          `/biome[${getXPathEqualExpression(biome, "name")}]`
         )
       );
-
-  public getConfigName = (): keyof ConfigFiles => "spawning";
 
   public generateXPathCollection = (
     config: SpawningXMLFile

@@ -10,8 +10,6 @@ import { GamestagesXMLFile } from "./../types/files/GamestagesXMLFile";
 import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
 import { ConfigFiles } from "../types/files/ConfigFiles";
 
-const SPAWNER_NAME_BLACKLIST = [/^animal.*$/];
-
 const SPAWN_GROUP_BLACKLIST = [
   /^ZombieBearsGroup$/,
   /^VultureGroup$/,
@@ -20,6 +18,7 @@ const SPAWN_GROUP_BLACKLIST = [
   /^ZombieAnimalsGroup$/,
   /^ZombieDogGroup$/,
   /^EnemyAnimalsCoyote$/,
+  /^animal.*$/,
 ];
 
 class ScaleGamestageSpawnGenerator extends Generator {
@@ -27,20 +26,17 @@ class ScaleGamestageSpawnGenerator extends Generator {
     super();
   }
 
-  private filterSpawn = propertyBlacklistFilter<Spawn>(
+  public getConfigName = (): keyof ConfigFiles => "gamestages";
+
+  private filterSpawnByGroup = propertyBlacklistFilter<Spawn>(
     "group",
     SPAWN_GROUP_BLACKLIST
-  );
-
-  private filterSpawner = propertyBlacklistFilter<Spawner>(
-    "name",
-    SPAWNER_NAME_BLACKLIST
   );
 
   private mapSpawn = (spawn: Spawn): Array<SetXPathTag> => {
     const num = safeNumberFromStringFactory(spawn.$.num);
     const maxAlive = safeNumberFromStringFactory(spawn.$.maxAlive);
-    const groupCondition = getXPathEqualExpression<Spawn>(spawn, "group");
+    const groupCondition = getXPathEqualExpression(spawn, "group");
 
     return [
       {
@@ -60,15 +56,12 @@ class ScaleGamestageSpawnGenerator extends Generator {
 
   private mapGamestage = (gamestage: Gamestage): Array<SetXPathTag> =>
     gamestage.spawn
-      .filter(this.filterSpawn)
+      .filter(this.filterSpawnByGroup)
       .map(this.mapSpawn)
       .flat()
       .map(
         curriedPrependXPathToTag(
-          `/gamestage[${getXPathEqualExpression<Gamestage>(
-            gamestage,
-            "stage"
-          )}]`
+          `/gamestage[${getXPathEqualExpression(gamestage, "stage")}]`
         )
       );
 
@@ -78,19 +71,14 @@ class ScaleGamestageSpawnGenerator extends Generator {
       .flat()
       .map(
         curriedPrependXPathToTag(
-          `/spawner[${getXPathEqualExpression<Spawner>(spawner, "name")}]`
+          `/spawner[${getXPathEqualExpression(spawner, "name")}]`
         )
       );
-
-  public getConfigName = (): keyof ConfigFiles => "gamestages";
 
   public generateXPathCollection = (
     config: GamestagesXMLFile
   ): XPathTagCollection => {
-    const setTags = config.gamestages.spawner
-      .filter(this.filterSpawner)
-      .map(this.mapSpawner)
-      .flat();
+    const setTags = config.gamestages.spawner.map(this.mapSpawner).flat();
 
     return {
       set: setTags,

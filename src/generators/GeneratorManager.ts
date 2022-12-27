@@ -67,6 +67,13 @@ class GeneratorManager {
   ): Promise<Array<AssociatedXPathTagCollection>> =>
     Promise.all(generators.map(this.getSingleXPathCollection));
 
+  /*
+    TODO
+    instead of merging everything, it may be better instead of convert a collection to xml string & then add a comment in front of it
+    since this library doesn't support comments, generators can implement method to add more comment data
+    problem is, how to then have a root node.
+    once conversion to string happens, all operations must be done via string manipulation since using the library will lose comment info
+  */
   private mergeAllXPathCollections = (
     associatedCollections: Array<AssociatedXPathTagCollection>
   ): XPathTagCollectionConfigMap => {
