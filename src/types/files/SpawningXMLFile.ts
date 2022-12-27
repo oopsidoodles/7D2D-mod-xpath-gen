@@ -4,7 +4,8 @@ export type Spawn = {
     respawndelay: string;
     time: string;
     entitygroup: string;
-    notags: string;
+    tags?: string;
+    notags?: string;
   };
 };
 

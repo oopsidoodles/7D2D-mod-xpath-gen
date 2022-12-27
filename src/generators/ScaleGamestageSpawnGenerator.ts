@@ -3,6 +3,7 @@ import curriedPrependXPathToTag from "../utils/curriedPrependXPathToTag";
 import safeNumberFromStringFactory from "../utils/SafeNumber/safeNumberFactory";
 import scaleSafeNumber from "../utils/scaleSafeNumber";
 import propertyBlacklistFilter from "../utils/propertyBlacklistFilter";
+import getXPathEqualExpression from "../utils/getXPathEqualExpression";
 import { Spawn, Gamestage, Spawner } from "./../types/files/GamestagesXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
 import { GamestagesXMLFile } from "./../types/files/GamestagesXMLFile";
@@ -39,18 +40,19 @@ class ScaleGamestageSpawnGenerator extends Generator {
   private mapSpawn = (spawn: Spawn): Array<SetXPathTag> => {
     const num = safeNumberFromStringFactory(spawn.$.num);
     const maxAlive = safeNumberFromStringFactory(spawn.$.maxAlive);
+    const groupCondition = getXPathEqualExpression<Spawn>(spawn, "group");
 
     return [
       {
         _: scaleSafeNumber(num, this.scale).toString(),
         $: {
-          xpath: `/spawn[@group='${spawn.$.group}']/@num`,
+          xpath: `/spawn[${groupCondition}]/@num`,
         },
       },
       {
         _: scaleSafeNumber(maxAlive, this.scale).toString(),
         $: {
-          xpath: `/spawn[@group='${spawn.$.group}']/@maxAlive`,
+          xpath: `/spawn[${groupCondition}]/@maxAlive`,
         },
       },
     ];
@@ -62,14 +64,23 @@ class ScaleGamestageSpawnGenerator extends Generator {
       .map(this.mapSpawn)
       .flat()
       .map(
-        curriedPrependXPathToTag(`/gamestage[@stage='${gamestage.$.stage}']`)
+        curriedPrependXPathToTag(
+          `/gamestage[${getXPathEqualExpression<Gamestage>(
+            gamestage,
+            "stage"
+          )}]`
+        )
       );
 
   private mapSpawner = (spawner: Spawner): Array<SetXPathTag> =>
     spawner.gamestage
       .map(this.mapGamestage)
       .flat()
-      .map(curriedPrependXPathToTag(`/spawner[@name='${spawner.$.name}']`));
+      .map(
+        curriedPrependXPathToTag(
+          `/spawner[${getXPathEqualExpression<Spawner>(spawner, "name")}]`
+        )
+      );
 
   public getConfigName = (): keyof ConfigFiles => "gamestages";
 

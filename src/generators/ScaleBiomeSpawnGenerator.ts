@@ -3,6 +3,8 @@ import curriedPrependXPathToTag from "../utils/curriedPrependXPathToTag";
 import safeNumberFromStringFactory from "../utils/SafeNumber/safeNumberFactory";
 import scaleSafeNumber from "../utils/scaleSafeNumber";
 import propertyBlacklistFilter from "../utils/propertyBlacklistFilter";
+import getXPathEqualExpression from "../utils/getXPathEqualExpression";
+import getXPathAndExpression from "../utils/getXPathAndExpression";
 import { Biome, Spawn, SpawningXMLFile } from "../types/files/SpawningXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
 import { ConfigFiles } from "../types/files/ConfigFiles";
@@ -23,13 +25,17 @@ class ScaleBiomeSpawnGenerator extends Generator {
     SPAWN_ENTITYGROUP_BLACKLIST
   );
 
-  // TODO this needs much more descriptive xpath tags, need a utility to combine multiple AND conditions into valid xpath
   private mapSpawn = (spawn: Spawn): SetXPathTag => {
     const maxCount = safeNumberFromStringFactory(spawn.$.maxcount);
     return {
       _: scaleSafeNumber(maxCount, this.scale).toString(),
       $: {
-        xpath: `/spawn[@entitygroup='${spawn.$.entitygroup}']/@maxcount`,
+        xpath: `/spawn[${getXPathAndExpression<Spawn>(spawn, [
+          "entitygroup",
+          "time",
+          "tags",
+          "notags",
+        ])}]/@maxcount`,
       },
     };
   };
@@ -38,7 +44,11 @@ class ScaleBiomeSpawnGenerator extends Generator {
     biome.spawn
       .filter(this.filterSpawn)
       .map(this.mapSpawn)
-      .map(curriedPrependXPathToTag(`/biome[@name='${biome.$.name}']`));
+      .map(
+        curriedPrependXPathToTag(
+          `/biome[${getXPathEqualExpression<Biome>(biome, "name")}]`
+        )
+      );
 
   public getConfigName = (): keyof ConfigFiles => "spawning";
 

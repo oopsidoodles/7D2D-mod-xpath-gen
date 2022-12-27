@@ -1,7 +1,8 @@
-import { Spawn } from "../types/files/SpawningXMLFile";
-
 const propertyBlacklistFilter =
-  <T extends { $: {} }>(property: keyof T["$"], blacklist: Array<RegExp>) =>
+  <T extends { $: Record<string, string> }>(
+    property: keyof T["$"],
+    blacklist: Array<RegExp>
+  ) =>
   (obj: T) => {
     // written in this way for quick return
     for (const blacklisted of blacklist) {
