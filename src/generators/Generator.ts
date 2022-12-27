@@ -1,22 +1,22 @@
-import ConfigFileDriver from "../utils/ConfigFileDriver";
+import ConfigFileService from "../utils/ConfigFileService";
 import parseXML from "../utils/parseXML";
 import writeXML from "../utils/writeXML";
 import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
 
 abstract class Generator {
-  private configFileDriver: ConfigFileDriver;
+  private configFileDriver: ConfigFileService;
 
   constructor(
     private inFileDir: string,
     private outFilePath: string,
     private namespace: string
   ) {
-    this.configFileDriver = new ConfigFileDriver(inFileDir);
+    this.configFileDriver = new ConfigFileService(inFileDir);
   }
 
   protected async readFile<
     T extends Parameters<
-      typeof ConfigFileDriver["prototype"]["readConfigFile"]
+      typeof ConfigFileService["prototype"]["readConfigFile"]
     >[0]
   >(name: T) {
     return this.configFileDriver.readConfigFile(name);

@@ -2,7 +2,8 @@ import Generator from "./Generator";
 import curriedPrependXPathToTag from "../utils/curriedPrependXPathToTag";
 import safeNumberFromStringFactory from "../utils/SafeNumber/safeNumberFactory";
 import scaleSafeNumber from "../utils/scaleSafeNumber";
-import { SpawningXMLFile, Biome, Spawn } from "../types/files/SpawningXMLFile";
+import propertyBlacklistFilter from "../utils/propertyBlacklistFilter";
+import { Biome, Spawn } from "../types/files/SpawningXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
 
 const SPAWN_ENTITYGROUP_BLACKLIST: Array<RegExp> = [
@@ -20,15 +21,10 @@ class ScaleBiomeSpawnGenerator extends Generator {
     super(inFilePath, outFilePath, namespace);
   }
 
-  private filterSpawn = (spawn: Spawn): boolean => {
-    // written in this way for quick return
-    for (const entityGroup of SPAWN_ENTITYGROUP_BLACKLIST) {
-      if (spawn.$.entitygroup.match(entityGroup)) {
-        return false;
-      }
-    }
-    return true;
-  };
+  private filterSpawn = propertyBlacklistFilter<Spawn>(
+    "entitygroup",
+    SPAWN_ENTITYGROUP_BLACKLIST
+  );
 
   private mapSpawn = (spawn: Spawn): SetXPathTag => {
     const maxCount = safeNumberFromStringFactory(spawn.$.maxcount);
@@ -40,12 +36,11 @@ class ScaleBiomeSpawnGenerator extends Generator {
     };
   };
 
-  private mapBiome = (biome: Biome): Array<SetXPathTag> => {
-    return biome.spawn
+  private mapBiome = (biome: Biome): Array<SetXPathTag> =>
+    biome.spawn
       .filter(this.filterSpawn)
       .map(this.mapSpawn)
       .map(curriedPrependXPathToTag(`/biome[@name='${biome.$.name}']`));
-  };
 
   public run = async () => {
     const data = await super.readFile("spawning");

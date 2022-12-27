@@ -3,7 +3,7 @@ import parseXML from "./parseXML";
 import { ConfigFiles } from "../types/files/ConfigFiles";
 import { ConfigFileNameMap } from "../enums/ConfigFileNameMap";
 
-class ConfigFileDriver {
+class ConfigFileService {
   constructor(private inputDir: string) {}
 
   public readConfigFile = <T extends keyof ConfigFiles>(
@@ -14,4 +14,4 @@ class ConfigFileDriver {
   };
 }
 
-export default ConfigFileDriver;
+export default ConfigFileService;

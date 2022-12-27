@@ -13,7 +13,7 @@ export type Biome = {
   spawn: Array<Spawn>;
 };
 
-type Spawning = {
+export type Spawning = {
   biome: Array<Biome>;
   entityspawner: Array<Object>;
 };

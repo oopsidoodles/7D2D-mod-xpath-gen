@@ -1,7 +1,7 @@
 import { SpawningXMLFile } from "./SpawningXMLFile";
+import { GamestagesXMLFile } from "./GamestagesXMLFile";
 
 export type ConfigFiles = {
   spawning: SpawningXMLFile;
-  // TODO gamestages xml file type here
-  gamestages: 5;
+  gamestages: GamestagesXMLFile;
 };
