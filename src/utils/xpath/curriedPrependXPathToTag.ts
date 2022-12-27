@@ -1,5 +1,5 @@
 import prependXPathToTag from "./prependXPathToTag";
-import { XPathTag } from "../types/XPath/XPathTag";
+import { XPathTag } from "../../types/XPath/XPathTag";
 
 // it would be nice if there was some utility to create curried functions for us and preserve type information (ex. Haskell)
 const curriedPrependXPathToTag =

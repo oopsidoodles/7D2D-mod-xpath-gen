@@ -1,6 +1,6 @@
 import path from "path";
-import parseXML from "./parseXML";
-import writeXML from "./writeXML";
+import readXML from "./io/readXML";
+import writeXML from "./io/writeXML";
 import { ConfigFiles } from "../types/files/ConfigFiles";
 import { ConfigFileNameMap } from "../enums/ConfigFileNameMap";
 
@@ -11,7 +11,7 @@ class ConfigFileService {
     name: T
   ): Promise<ConfigFiles[T]> => {
     const fullPath = path.join(this.inputDir, ConfigFileNameMap[name]);
-    return parseXML<ConfigFiles[T]>(fullPath);
+    return readXML<ConfigFiles[T]>(fullPath);
   };
 
   public writeConfigFile = async (

@@ -1,4 +1,4 @@
-import { XPathTag } from "../types/XPath/XPathTag";
+import { XPathTag } from "../../types/XPath/XPathTag";
 
 // this mutates the tag
 const prependXPathToTag = <T extends XPathTag>(prefix: string, tag: T): T => {

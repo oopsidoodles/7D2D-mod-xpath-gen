@@ -1,7 +1,7 @@
 import Generator from "./Generator";
 import ConfigFileService from "../utils/ConfigFileService";
-import mergeXPathTagCollections from "../utils/mergeXPathTagCollections";
-import writeXML from "../utils/writeXML";
+import mergeXPathTagCollections from "../utils/xpath/mergeXPathTagCollections";
+import writeXML from "../utils/io/writeXML";
 import { ConfigFiles } from "../types/files/ConfigFiles";
 import { XPathTagCollection } from "./../types/XPath/XPathTagCollection";
 

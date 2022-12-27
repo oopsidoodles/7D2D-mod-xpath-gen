@@ -1,4 +1,4 @@
-import { XPathTagCollection } from "../types/XPath/XPathTagCollection";
+import { XPathTagCollection } from "../../types/XPath/XPathTagCollection";
 
 // this mutates finalCollection
 const mergeSingleXPathTagCollectionProperty = (

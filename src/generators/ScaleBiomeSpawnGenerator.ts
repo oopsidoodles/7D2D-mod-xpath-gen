@@ -1,10 +1,10 @@
 import Generator from "./Generator";
-import curriedPrependXPathToTag from "../utils/curriedPrependXPathToTag";
+import curriedPrependXPathToTag from "../utils/xpath/curriedPrependXPathToTag";
 import safeNumberFromStringFactory from "../utils/SafeNumber/safeNumberFactory";
-import scaleSafeNumber from "../utils/scaleSafeNumber";
+import scaleSafeNumber from "../utils/SafeNumber/scaleSafeNumber";
 import propertyBlacklistFilter from "../utils/propertyBlacklistFilter";
-import getXPathEqualExpression from "../utils/getXPathEqualExpression";
-import getXPathAndExpression from "../utils/getXPathAndExpression";
+import getXPathEqualExpression from "../utils/xpath/getXPathEqualExpression";
+import getXPathAndExpression from "../utils/xpath/getXPathAndExpression";
 import { Biome, Spawn, SpawningXMLFile } from "../types/files/SpawningXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
 import { ConfigFiles } from "../types/files/ConfigFiles";

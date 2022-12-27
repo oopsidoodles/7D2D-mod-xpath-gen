@@ -1,9 +1,9 @@
 import Generator from "./Generator";
-import curriedPrependXPathToTag from "../utils/curriedPrependXPathToTag";
+import curriedPrependXPathToTag from "../utils/xpath/curriedPrependXPathToTag";
 import safeNumberFromStringFactory from "../utils/SafeNumber/safeNumberFactory";
-import scaleSafeNumber from "../utils/scaleSafeNumber";
+import scaleSafeNumber from "../utils/SafeNumber/scaleSafeNumber";
 import propertyBlacklistFilter from "../utils/propertyBlacklistFilter";
-import getXPathEqualExpression from "../utils/getXPathEqualExpression";
+import getXPathEqualExpression from "../utils/xpath/getXPathEqualExpression";
 import { Spawn, Gamestage, Spawner } from "./../types/files/GamestagesXMLFile";
 import { SetXPathTag } from "../types/XPath/SetXPathTag";
 import { GamestagesXMLFile } from "./../types/files/GamestagesXMLFile";

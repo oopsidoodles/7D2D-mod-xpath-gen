@@ -1,6 +1,6 @@
-import SafeNumber from "./SafeNumber/SafeNumber";
-import SingleSafeNumber from "./SafeNumber/SingleSafeNumber";
-import RangeSafeNumber from "./SafeNumber/RangeSafeNumber";
+import SafeNumber from "./SafeNumber";
+import SingleSafeNumber from "./SingleSafeNumber";
+import RangeSafeNumber from "./RangeSafeNumber";
 
 //strategy pattern
 const scaleSafeNumber = (number: SafeNumber, scale: number): SafeNumber => {
