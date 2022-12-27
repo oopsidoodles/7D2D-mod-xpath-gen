@@ -13,11 +13,9 @@ export type Biome = {
   spawn: Array<Spawn>;
 };
 
-type EntitySpawner = Object;
-
 type Spawning = {
   biome: Array<Biome>;
-  entityspawner: Array<EntitySpawner>;
+  entityspawner: Array<Object>;
 };
 
 export type SpawningXMLFile = {

@@ -11,8 +11,13 @@ const SPAWN_ENTITYGROUP_BLACKLIST: Array<RegExp> = [
 ];
 
 class ScaleBiomeSpawnGenerator extends Generator {
-  constructor(inFilePath: string, outFilePath: string, private scale: number) {
-    super(inFilePath, outFilePath);
+  constructor(
+    inFilePath: string,
+    outFilePath: string,
+    namespace: string,
+    private scale: number
+  ) {
+    super(inFilePath, outFilePath, namespace);
   }
 
   private filterSpawn = (spawn: Spawn): boolean => {
@@ -44,11 +49,15 @@ class ScaleBiomeSpawnGenerator extends Generator {
 
   public run = async () => {
     const data = await super.readFile<SpawningXMLFile>();
-    const res = data.spawning.biome
+    console.log(data);
+    const setTags = data.spawning.biome
       .map(this.mapBiome)
       .flat()
       .map(curriedPrependXPathToTag("/spawning"));
-    console.dir(res, { depth: null });
+    // console.dir(setTags, { depth: null });
+    await super.writeFile({
+      set: setTags,
+    });
   };
 }
 
