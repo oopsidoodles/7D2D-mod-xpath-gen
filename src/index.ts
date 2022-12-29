@@ -2,39 +2,22 @@ import ScaleBiomeSpawnGenerator from "./generators/ScaleBiomeSpawnGenerator";
 import ScaleGamestageSpawnGenerator from "./generators/ScaleGamestageSpawnGenerator";
 import ScaleLegacySpawnGenerator from "./generators/ScaleLegacySpawnGenerator";
 import GeneratorManager from "./generators/GeneratorManager";
-// import readXML from "./utils/io/readXML";
-// import fs from "fs";
 
+// obviously this can come from argv or otherwise
+const SCALE = 5;
+
+// TODO proper error handling & usage message if args missing
+const [, , originalConfigDir, outputDir, namespace] = process.argv;
+
+// could also have a config json to provide preset defaults for args
 const main = async (): Promise<void> => {
-  const manager = new GeneratorManager(
-    "D:\\Program Files (x86)\\Steam\\steamapps\\common\\7 Days To Die\\Data\\Config",
-    "D:\\Users\\Vili\\Desktop\\7d2d_mod_xpath_gen",
-    "oopsidoodles"
-  );
+  const manager = new GeneratorManager(originalConfigDir, outputDir, namespace);
 
-  // const gen = new ScaleGamestageSpawnGenerator(
-  //   "D:\\Program Files (x86)\\Steam\\steamapps\\common\\7 Days To Die\\Data\\Config",
-  //   "D:\\Users\\Vili\\Desktop\\7d2d_mod_xpath_gen\\gamestages.xml",
-  //   "oopsidoodles",
-  //   5
-  // );
-
-  manager.addGenerator(new ScaleBiomeSpawnGenerator(5));
-  // manager.addGenerator(new ScaleBiomeSpawnGenerator(10));
-  manager.addGenerator(new ScaleLegacySpawnGenerator(5));
-  manager.addGenerator(new ScaleGamestageSpawnGenerator(5));
+  manager.addGenerator(new ScaleBiomeSpawnGenerator(SCALE));
+  manager.addGenerator(new ScaleLegacySpawnGenerator(SCALE));
+  manager.addGenerator(new ScaleGamestageSpawnGenerator(SCALE));
 
   await manager.run();
-
-  // const str = await readXML(
-  //   "D:\\Users\\Vili\\Desktop\\7d2d_mod_xpath_gen\\spawning.xml"
-  // )
-  //   .then((res) => res.oopsidoodles.set.map((set) => set.$.xpath))
-  //   .then((arr) => arr.join("\n"));
-  // await fs.promises.writeFile(
-  //   "D:\\Users\\Vili\\Desktop\\7d2d_mod_xpath_gen\\temp.log",
-  //   str
-  // );
 };
 
 main();
